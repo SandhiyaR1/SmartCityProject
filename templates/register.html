@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card mx-auto mt-5 shadow" style="max-width: 400px;">
+    <div class="card-header bg-success text-white text-center">
+        <h4>📝 Register</h4>
+    </div>
+    <div class="card-body">
+        <form method="POST">
+            <div class="mb-3">
+                <label>Username</label>
+                <input type="text" name="username" class="form-control" required>
+            </div>
+            <div class="mb-3">
+                <label>Password</label>
+                <input type="password" name="password" class="form-control" required>
+            </div>
+            <div class="mb-3">
+                <label>I am a:</label>
+                <select name="role" class="form-select" id="roleSelect" onchange="toggleRegion()">
+                    <option value="citizen">Citizen</option>
+                    <option value="mayor">Mayor / Authority</option>
+                </select>
+            </div>
+            <div class="mb-3" id="regionField" style="display:none;">
+                <label>City/Region (For Mayors)</label>
+                <input type="text" name="region" class="form-control" placeholder="e.g., Chennai">
+            </div>
+            <button type="submit" class="btn btn-success w-100">Register</button>
+        </form>
+        <div class="text-center mt-3">
+            <a href="/login">Already have an account?</a>
+        </div>
+    </div>
+</div>
+
+<script>
+function toggleRegion() {
+    var role = document.getElementById("roleSelect").value;
+    document.getElementById("regionField").style.display = (role === "mayor") ? "block" : "none";
+}
+</script>
+{% endblock %}

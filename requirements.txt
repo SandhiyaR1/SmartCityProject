@@ -1,0 +1,9 @@
+Flask
+Flask-Login
+werkzeug
+geopy
+ultralytics
+torch
+opencv-python
+pillow
+gunicorn

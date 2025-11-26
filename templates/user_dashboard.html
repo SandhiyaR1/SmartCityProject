@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+{% block content %}
+<nav class="navbar navbar-light bg-white shadow-sm rounded mb-4 p-3">
+    <span class="h4">👤 Welcome, {{ user.username }}</span>
+    <a href="/logout" class="btn btn-outline-danger">Logout</a>
+</nav>
+
+<div class="row">
+    <div class="col-md-5">
+        <div class="card shadow">
+            <div class="card-header bg-danger text-white">
+                <h5>📸 Report Hazard</h5>
+            </div>
+            <div class="card-body">
+                <p id="gps-msg" class="text-warning fw-bold">⏳ Acquiring GPS Location...</p>
+                
+                <form method="POST" enctype="multipart/form-data">
+                    <input type="hidden" name="lat" id="lat">
+                    <input type="hidden" name="lon" id="lon">
+                    
+                    <div class="mb-3">
+                        <label>Upload Evidence</label>
+                        <input type="file" name="file" class="form-control" required>
+                    </div>
+                    <button type="submit" id="submitBtn" class="btn btn-danger w-100" disabled>
+                        📍 Submit Report
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-7">
+        <div class="card shadow">
+            <div class="card-header bg-secondary text-white">
+                <h5>📜 My Reports</h5>
+            </div>
+            <div class="card-body p-0">
+                <table class="table table-striped mb-0">
+                    <thead>
+                        <tr>
+                            <th>Issue</th>
+                            <th>Location</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for r in reports %}
+                        <tr>
+                            <td>{{ r.hazard_type }}</td>
+                            <td style="font-size:0.8em;">{{ r.address }}</td>
+                            <td>
+                                {% if r.status == 'Pending' %}
+                                    <span class="badge bg-warning text-dark">Pending</span>
+                                {% else %}
+                                    <span class="badge bg-success">Resolved</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Auto-Run on Page Load
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(showPosition, showError);
+    } else {
+        document.getElementById("gps-msg").innerHTML = "❌ GPS Not Supported";
+    }
+
+    function showPosition(position) {
+        document.getElementById("lat").value = position.coords.latitude;
+        document.getElementById("lon").value = position.coords.longitude;
+        document.getElementById("gps-msg").innerHTML = "✅ Location Locked!";
+        document.getElementById("gps-msg").className = "text-success fw-bold";
+        document.getElementById("submitBtn").disabled = false;
+    }
+
+    function showError(error) {
+        document.getElementById("gps-msg").innerHTML = "❌ GPS Permission Denied.";
+    }
+</script>
+{% endblock %}

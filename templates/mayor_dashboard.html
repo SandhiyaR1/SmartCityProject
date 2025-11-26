@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block content %}
+<nav class="navbar navbar-dark bg-dark shadow rounded mb-4 p-3">
+    <span class="navbar-brand">🏛 Mayor Dashboard - {{ user.region }}</span>
+    <a href="/logout" class="btn btn-outline-light">Logout</a>
+</nav>
+
+<div class="table-responsive shadow">
+    <table class="table table-hover align-middle border">
+        <thead class="table-secondary">
+            <tr>
+                <th>Evidence</th>
+                <th>Hazard Type</th>
+                <th>Address</th>
+                <th>Coordinates</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for r in reports %}
+            <tr>
+                <td>
+                    <a href="{{ r.annotated_path }}" target="_blank">
+                        <img src="{{ r.annotated_path }}" width="100" class="rounded border">
+                    </a>
+                </td>
+                <td><span class="badge bg-danger">{{ r.hazard_type }}</span></td>
+                <td>{{ r.address }}</td>
+                <td><small>{{ r.latitude }}, {{ r.longitude }}</small></td>
+                <td>
+                    {% if r.status == 'Pending' %}
+                        <span class="badge bg-warning text-dark">Pending</span>
+                    {% else %}
+                        <span class="badge bg-success">Resolved</span>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if r.status == 'Pending' %}
+                        <a href="/resolve/{{ r.id }}" class="btn btn-success btn-sm">✔ Fix Issue</a>
+                    {% else %}
+                        <button class="btn btn-secondary btn-sm" disabled>Closed</button>
+                    {% endif %}
+                </td>
+            </tr>
+            {% else %}
+                <tr><td colspan="6" class="text-center">No active hazards in {{ user.region }}.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
